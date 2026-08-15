@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:18.4
+    container_name: aero-search-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aero
+      POSTGRES_PASSWORD: aero123
+      POSTGRES_DB: aero_search
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aero -d aero_search"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
